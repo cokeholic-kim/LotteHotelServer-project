@@ -91,6 +91,32 @@ app.post("/join",async (req,res)=>{
     console.log(req.body)
 })
 
+//로그인 요청
+app.post("/login",async (req,res)=>{
+    // 1) useremail 값에 일치하는 데이터가 있는지 확인
+    // 2) userpass 암호화해서 쿼리 결과의 패스워드랑 일치하는지 체크
+    const {useremail , userpass } = req.body;
+    console.log(req.body)
+    conn.query(`select * from member where m_email = '${useremail}'`,(error,result,field)=>{
+        //결과가 undefined가 아니고 결과의 0번째가 undefined가 아닐때
+        //결과가 있을때.
+        if(result != undefined && result[0] != undefined){
+            bcrypt.compare(userpass,result[0].m_pass,function(err,res2){
+                //result == true / false
+                if(res2){
+                    console.log("로그인 성공")
+                    res.send(result)
+                }else{
+                    console.log("로그인 실패")
+                    res.send("실패")
+                }
+            })
+        }else{
+            console.log("데이터가 없습니다")
+        }
+    })
+})
+
 app.listen(port,()=>{
     console.log("서버가 구동중입니다.")
 })
