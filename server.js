@@ -34,7 +34,8 @@ const storage = multer.diskStorage({
 //upload객체 생성하기
 const upload = multer({ storage : storage });
 //upload경로로 post 요청시 응답 구현하기
-app.post("/upload",upload.single("file"),async (req,res)=>{
+app.post("/upload",upload.single("img"),async (req,res)=>{
+    console.log("등록됨")
     res.send({
         imageURL:req.file.filename
     })
@@ -178,6 +179,31 @@ app.patch("/updatePw",async (req, res)=>{
             });
         });
     }
+})
+
+//이벤트 등록 요청
+app.post('/event', async (req,res)=>{
+    const {
+        e_title,
+        e_time,
+        e_titledesc,
+        e_desc,
+        e_category,
+        e_img1,
+        e_img2,
+    } = req.body;
+    //insert into table이름(컬럼) values(값)
+    //insert into table이름(컬럼) values(?,?,?,?,?,?,?),[값,값,값,값,값,값]
+    conn.query(`insert into event(e_title,e_time,e_titledesc,e_desc,e_category,e_img1,e_img2) values(?,?,?,?,?,?,?)`
+    ,[e_title,e_time,e_titledesc,e_desc,e_category,e_img1,e_img2]
+    ,(err,result,field)=>{
+        if(result){
+            console.log(result)
+            res.send('ok')
+        }else{
+            console.log(err)
+        }
+    })
 })
 
 
