@@ -231,7 +231,19 @@ app.get("/room",async (req,res)=>{
         if(result){
             res.send(result)
         }else{
-            console.log(err)
+            console.log(`/room : ${err}`)
+        }
+    })
+})
+
+//객실 데이터 요청
+app.get("/room/:no",(req,res)=>{
+    const{no} = req.params;
+    conn.query(`select * from guestroom where r_no=${no}`,(error,result,fields)=>{
+        if(result){
+            res.send(result[0])
+        }else{
+            console.log(error)  
         }
     })
 })
