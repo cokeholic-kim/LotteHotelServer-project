@@ -248,6 +248,24 @@ app.get("/room/:no",(req,res)=>{
     })
 })
 
+//객실 예약 관련 **************************
+//객실 예약조회
+app.get('/serchRoom',async (req,res)=>{
+    //쿼리스트링 데이터 받기.
+    const {start,end} = req.query;
+    //select rv_roomno from reservation rv_checkin >= '${start}' and rv_checkin < '${end}'
+    conn.query(`select rv_roomno from 
+    reservation where rv_checkin >= '${start}' and rv_checkin < '${end}'`,(err,result,field)=>{
+        if(result){
+            result = result.map(re=>Number(re.rv_roomno))
+            console.log(result)
+            res.send(result)
+        }else{
+            console.log(err)
+        }
+    })
+})
+
 
 app.listen(port,()=>{
     console.log("서버가 구동중입니다.")
